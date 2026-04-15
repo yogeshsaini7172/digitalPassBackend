@@ -1,0 +1,11 @@
+# Virtual environment
+venv/
+env/
+
+# Cache
+__pycache__/
+*.pyc
+
+# Secrets and environment variables
+.env
+digital-pass-fcm-service-account.json
