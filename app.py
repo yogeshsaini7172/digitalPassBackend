@@ -14,7 +14,6 @@ import smtplib
 from email.message import EmailMessage
 import logging
 from dotenv import load_dotenv
-from waitress import serve
 import json
 from datetime import datetime,timezone,timedelta
 import requests
