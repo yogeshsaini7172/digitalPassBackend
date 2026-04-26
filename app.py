@@ -1,5 +1,5 @@
 import eventlet
-eventlet.monkey_patch()
+eventlet.monkey_patch(all=True)
 import random
 import string
 import uuid
@@ -2040,8 +2040,17 @@ def update_password():
 
 # yogeshsaini7172@gmail.com
 # Move background tasks outside __main__ so Gunicorn runs them
-socket.start_background_task(watch_visitor_collection)
-socket.start_background_task(watchGatePassCollection)
+def start_watcher(func):
+    """Helper to keep watchers running even if they fail due to connection drops"""
+    while True:
+        try:
+            func()
+        except Exception as e:
+            print(f"Watcher {func.__name__} failed, restarting in 5s... Error: {e}")
+            eventlet.sleep(5)
+
+socket.start_background_task(lambda: start_watcher(watch_visitor_collection))
+socket.start_background_task(lambda: start_watcher(watchGatePassCollection))
 
 if __name__ == '__main__':
     
