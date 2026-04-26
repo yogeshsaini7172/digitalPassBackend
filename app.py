@@ -1081,9 +1081,17 @@ def edit_visitor():
 
 socket=SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 
+watcher_started = False
+
 @socket.on("connect")
 def connect():
+    global watcher_started
     print("user connected")
+    if not watcher_started:
+        print("Starting background database watchers...")
+        socket.start_background_task(lambda: start_watcher(watch_visitor_collection))
+        socket.start_background_task(lambda: start_watcher(watchGatePassCollection))
+        watcher_started = True
 
 #to joinRoom by using users token
 @socket.on("joinRoom")
@@ -2049,8 +2057,8 @@ def start_watcher(func):
             print(f"Watcher {func.__name__} failed, restarting in 5s... Error: {e}")
             eventlet.sleep(5)
 
-socket.start_background_task(lambda: start_watcher(watch_visitor_collection))
-socket.start_background_task(lambda: start_watcher(watchGatePassCollection))
+# Background tasks are now started in the 'connect' event to ensure 
+# they only run once the server is fully initialized by Gunicorn.
 
 if __name__ == '__main__':
     
