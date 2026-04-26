@@ -707,7 +707,7 @@ def edit_user():
          return jsonify({"message": "A user with this email already exists"}), 400
      #set campus of user as requester campus if requester is not admin
      if requester["role"]!="admin":
-         data["campus"]=request["campus"]
+         data["campus"]=requester["campus"]
      
      #set batch if user role is not a student with format campus-department-role
      if data['role']!="student":
