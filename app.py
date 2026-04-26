@@ -705,6 +705,9 @@ def edit_user():
      exisitingUser=users_collection.find_one({"email": data["email"]})
      if exisitingUser and exisitingUser['email']!=previousEmail:
          return jsonify({"message": "A user with this email already exists"}), 400
+     #set campus of user as requester campus if requester is not admin
+     if requester["role"]!="admin":
+         data["campus"]=request["campus"]
      
      #set batch if user role is not a student with format campus-department-role
      if data['role']!="student":
@@ -715,8 +718,8 @@ def edit_user():
      users_collection.update_one({"email": previousEmail}, {"$set": data})
 
      #send email to edited user
-    #  thToEditedUser=threading.Thread(target=sendEmailToAddedUser,args=('yogeshsaini7172@gmail.com','Account Updated in Digital Pass',f"Dear {previousEmail},\n\nYour account details have been updated in Digital Pass.\n\nBest regards,\n Digital Pass"),daemon=True)
-    #  thToEditedUser.start()
+     #  thToEditedUser=threading.Thread(target=sendEmailToAddedUser,args=('yogeshsaini7172@gmail.com','Account Updated in Digital Pass',f"Dear {previousEmail},\n\nYour account details have been updated in Digital Pass.\n\nBest regards,\n Digital Pass"),daemon=True)
+     #  thToEditedUser.start()
 
     
      return jsonify({"message": "User details updated successfully!"}), 200
