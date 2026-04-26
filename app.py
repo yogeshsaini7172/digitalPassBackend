@@ -5,6 +5,7 @@ import string
 import uuid
 from zoneinfo import ZoneInfo
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from pymongo import MongoClient
 from pymongo.errors import OperationFailure
@@ -36,6 +37,13 @@ firebase_admin.initialize_app(cred)
 load_dotenv()
 
 app = Flask(__name__)
+
+# Allow requests from GitHub Pages and local dev
+CORS(app, origins=[
+    "https://yogeshsaini7172.github.io",
+    "http://localhost:5173",
+    "http://localhost:3000"
+])
 
 # mongodb://localhost:27017/
 #setup of mongodb connection with localhost and default port 27017 and database name localDB1
