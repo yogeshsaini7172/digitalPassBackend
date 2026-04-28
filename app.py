@@ -175,8 +175,8 @@ def login_user():
             #generate token for user
             token = str(uuid.uuid4())
 
-            #insert token in database for that user
-            users_collection.update_one({"email": email}, {"$set": {"token": token}})
+            #insert token in database for that user and unset fcmToken
+            users_collection.update_one({"email": email}, {"$set": {"token": token},"$unset": {"fcmToken": ""}})
             user['token']=token
             threading.Thread(target=sendEmail,args=(email,'Login Alert for Digital Pass',f"Dear {user['name']},\n\nYou have successfully logged in to your account in Digital Pass.\nIf this was not you, please contact the administration immediately.\n\nBest regards,\n Digital Pass"),daemon=True).start()
             return jsonify(user), 200
