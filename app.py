@@ -365,7 +365,8 @@ def upload_excel_users():
 
             user["token"] = ""
             user["img"] = ""
-            user["password"] = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+            user["password"] =str(uuid.uuid4())
+            
             if requester['role'] != "admin":
                 user['campus'] = requester['campus']
 
