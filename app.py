@@ -300,8 +300,8 @@ def add_new_user():
     #add user to database
     try:
         users_collection.insert_one(data)
-        thToAddedUser=threading.Thread(target=sendEmail,args=('yogeshsaini7172@gmail.com','Account Created in Digital Pass',f"Dear {data['name']},\n\nYour account has been created in Digital Pass.\nYour login credentials are:\nEmail: {data['email']}\nPassword: {data['password']}\n\nPlease change your password after logging in for the first time.\n\nBest regards,\n Digital Pass"),daemon=True)
-        # thToAddedUser.start()
+        thToAddedUser=threading.Thread(target=sendEmail,args=(data["email"],'Account Created in Digital Pass',f"Dear {data['name']},\n\nYour account has been created in Digital Pass.\nYour login credentials are:\nEmail: {data['email']}\nPassword: {data['password']}\n\nPlease change your password after logging in for the first time.\n\nBest regards,\n Digital Pass"),daemon=True)
+        thToAddedUser.start()
         return jsonify({"message": "User added successfully!"}), 200
     except Exception as e:
         print(f"Error occurred: {e}")
@@ -398,9 +398,9 @@ def upload_excel_users():
             users_collection.insert_many(users_list)
 
             #send email to added users
-            # for user in users_list:
-            #     thToAddedUser=threading.Thread(target=sendEmailToAddedUser,args=(user['email'],'Account Created in Digital Pass',f"Dear {user['name']},\n\nYour account has been created in Digital Pass.\nYour login credentials are:\nEmail: {user['email']}\nPassword: {user['password']}\n\nPlease change your password after logging in for the first time.\n\nBest regards,\n Digital Pass"),daemon=True)
-            #     thToAddedUser.start()
+            for user in users_list:
+                thToAddedUser=threading.Thread(target=sendEmail,args=(user['email'],'Account Created in Digital Pass',f"Dear {user['name']},\n\nYour account has been created in Digital Pass.\nYour login credentials are:\nEmail: {user['email']}\nPassword: {user['password']}\n\nPlease change your password after logging in for the first time.\n\nBest regards,\n Digital Pass"),daemon=True)
+                thToAddedUser.start()
         return jsonify({"message": "Users added successfully!"}), 200
     
     except Exception as e:
@@ -726,8 +726,8 @@ def edit_user():
      users_collection.update_one({"email": previousEmail}, {"$set": data})
 
      #send email to edited user
-     #  thToEditedUser=threading.Thread(target=sendEmailToAddedUser,args=('yogeshsaini7172@gmail.com','Account Updated in Digital Pass',f"Dear {previousEmail},\n\nYour account details have been updated in Digital Pass.\n\nBest regards,\n Digital Pass"),daemon=True)
-     #  thToEditedUser.start()
+     thToEditedUser=threading.Thread(target=sendEmail,args=(previousEmail,'Account Updated in Digital Pass',f"Dear {previousEmail},\n\nYour account details have been updated in Digital Pass.\n\nBest regards,\n Digital Pass"),daemon=True)
+     thToEditedUser.start()
 
     
      return jsonify({"message": "User details updated successfully!"}), 200
